@@ -1,183 +1,290 @@
-const JobPost=require('../Models/JobPost')
-const constant = require('../../config/constant')
-const { sendResponse } = require('../../config/helper');
-const{ uploadToCloudinary}=require('../../helper/cloudinary')
+const JobPost = require("../Models/JobPost");
+const constant = require("../../config/constant");
+const { sendResponse } = require("../../config/helper");
+const { uploadToCloudinary } = require("../../helper/cloudinary");
 
-module.exports={
-    createJobPost:async(req,res)=>{
-        try {
-            const bodyData={...req.body};
-            let result;
-            if (req.file) {
-                 result = await uploadToCloudinary(req.file.buffer, req.file.originalname);
-                 if(result?.http_code==400) return sendResponse("error during upload file", res, constant.CODE.INPUT_VALIDATION, {}, 0);
-                 bodyData.companyLogo=result.secure_url;
-            }
-            const jobpost=new JobPost(bodyData);
-            await jobpost.save()
-            return sendResponse("Job Create Successfully",res,constant.CODE.SUCCESS,{jobpost},1)
-        } catch (error) {
-            console.log(error)
-            return sendResponse("Internal Server Error",res,constant.CODE.INTERNAL_SERVER_ERROR,{},0)
+module.exports = {
+  createJobPost: async (req, res) => {
+    try {
+      const bodyData = { ...req.body };
+      let result;
+      if (req.file) {
+        result = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.originalname
+        );
+        if (result?.http_code == 400)
+          return sendResponse(
+            "error during upload file",
+            res,
+            constant.CODE.INPUT_VALIDATION,
+            {},
+            0
+          );
+        bodyData.companyLogo = result.secure_url;
+      }
+      const jobpost = new JobPost(bodyData);
+      await jobpost.save();
+      return sendResponse(
+        "Job Create Successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { jobpost },
+        1
+      );
+    } catch (error) {
+      console.log(error);
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 
-        }
-    },
-    
-    updateJobPost:async(req,res)=>{
-        try {
-            const {Id}=req.params;
-            const bodyData={...req.body};
-            let result;
-            if (req.file) {
-                 result = await uploadToCloudinary(req.file.buffer, req.file.originalname);
-                 if(result?.http_code==400) return sendResponse("error during upload file", res, constant.CODE.INPUT_VALIDATION, {}, 0);
-                 bodyData.companyLogo=result.secure_url
-            }
-            const jobpost=await JobPost.findByIdAndUpdate(Id,bodyData,{new:true})
-            if(!jobpost) sendResponse("Data not found",res,constant.CODE.NOT_FOUND,{},0)
+  updateJobPost: async (req, res) => {
+    try {
+      const { Id } = req.params;
+      const bodyData = { ...req.body };
+      let result;
+      if (req.file) {
+        result = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.originalname
+        );
+        if (result?.http_code == 400)
+          return sendResponse(
+            "error during upload file",
+            res,
+            constant.CODE.INPUT_VALIDATION,
+            {},
+            0
+          );
+        bodyData.companyLogo = result.secure_url;
+      }
+      const jobpost = await JobPost.findByIdAndUpdate(Id, bodyData, {
+        new: true,
+      });
+      if (!jobpost)
+        sendResponse("Data not found", res, constant.CODE.NOT_FOUND, {}, 0);
 
-            return sendResponse("Update Job Successfully",res,constant.CODE.SUCCESS,{jobpost},1)
-        } catch (error) {
-            return sendResponse("Internal Server Error",res,constant.CODE.INTERNAL_SERVER_ERROR,{},0)
-        }
-    },
+      return sendResponse(
+        "Update Job Successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { jobpost },
+        1
+      );
+    } catch (error) {
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 
-    deleteJobPost:async(req,res)=>{
-        try {
-            const {Id}=req.params;
+  deleteJobPost: async (req, res) => {
+    try {
+      const { Id } = req.params;
 
-            const jobpost=await JobPost.findByIdAndDelete(Id)
-            if(!jobpost) return sendResponse("Data not found",res,constant.CODE.NOT_FOUND,{},0)
+      const jobpost = await JobPost.findByIdAndDelete(Id);
+      if (!jobpost)
+        return sendResponse(
+          "Data not found",
+          res,
+          constant.CODE.NOT_FOUND,
+          {},
+          0
+        );
 
-            return sendResponse("Job Delete Successfully",res,constant.CODE.SUCCESS,{},1)
-            } catch (error) {
-             return sendResponse("Internal Server Error",res,constant.CODE.INTERNAL_SERVER_ERROR,{},0)
-        }
-    },
+      return sendResponse(
+        "Job Delete Successfully",
+        res,
+        constant.CODE.SUCCESS,
+        {},
+        1
+      );
+    } catch (error) {
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 
-    getJobPostById:async(req,res)=>{
-        try {
-            const {Id}=req.params;
-            const jobpost=await JobPost.findById(Id)
-            if(!jobpost) sendResponse("Data not found",res,constant.CODE.NOT_FOUND,{},0)
+  getJobPostById: async (req, res) => {
+    try {
+      const { Id } = req.params;
+      const jobpost = await JobPost.findById(Id);
+      if (!jobpost)
+        sendResponse("Data not found", res, constant.CODE.NOT_FOUND, {}, 0);
 
-            return sendResponse("Job Create Successfully",res,constant.CODE.SUCCESS,{jobpost},1)
-            } catch (error) {
-             return sendResponse("Internal Server Error",res,constant.CODE.INTERNAL_SERVER_ERROR,{},0)
-        }
-    },
-     getJobPostList : async (req, res) => {
-        try {
-            const search = req.query.search || '';
-            const fromDate = req.query.fromDate || '';
-            const toDate = req.query.toDate || '';
-            const page = parseInt(req.query.page, 10) || 1;
-            const limit = parseInt(req.query.limit, 10) || 10;
-            const jobSector=req.query.jobSector||'';
-            const query = {};
-            
-            if (search) {
-                query.$or = [
-                    { jobTitle: { $regex: new RegExp(search, 'i') } },
-                    { jobType: { $regex: new RegExp(search, 'i') } },
-                    { categoryName: { $regex: new RegExp(search, 'i') } },
-                    { subCategoryName: { $regex: new RegExp(search, 'i') } },
-                    { jobType: { $regex: new RegExp(search, 'i') } },
-                    { companyName: { $regex: new RegExp(search, 'i') } },
-                    { city: { $regex: new RegExp(search, 'i') } },
-                ];
-            }
-            if(jobSector) query.jobSector=jobSector;
-            if (fromDate && toDate) {
-                const from = new Date(fromDate);
-                const to = new Date(toDate);
-                to.setHours(23, 59, 59, 999); 
-                query.createdAt = {
-                    $gte: from,
-                    $lte: to
-                };
-            }
-            const total = await JobPost.countDocuments(query);
+      return sendResponse(
+        "Job Create Successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { jobpost },
+        1
+      );
+    } catch (error) {
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
+  getJobPostList: async (req, res) => {
+    try {
+      const search = req.query.search || "";
+      const fromDate = req.query.fromDate || "";
+      const toDate = req.query.toDate || "";
+      const page = parseInt(req.query.page, 10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 10;
+      const jobSector = req.query.jobSector || "";
+      const query = {};
 
-            const jobposts = await JobPost.find(query)
-                .sort({ createdAt: -1 })
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .exec();
-    
-            const response = {
-                data: jobposts,
-                currentPage: page,
-                totalPages: Math.ceil(total / limit),
-                totalList: total
-            };
-    
-            return sendResponse("Data fetched successfully", res, constant.CODE.SUCCESS, response, 1);
-        } catch (error) {
-            console.error(error);
-            return sendResponse("Internal Server Error", res, constant.CODE.INTERNAL_SERVER_ERROR, {}, 0);
-        }
-    },
+      if (search) {
+        query.$or = [
+          { jobTitle: { $regex: new RegExp(search, "i") } },
+          { jobType: { $regex: new RegExp(search, "i") } },
+          { categoryName: { $regex: new RegExp(search, "i") } },
+          { subCategoryName: { $regex: new RegExp(search, "i") } },
+          { jobType: { $regex: new RegExp(search, "i") } },
+          { companyName: { $regex: new RegExp(search, "i") } },
+          { city: { $regex: new RegExp(search, "i") } },
+        ];
+      }
+      if (jobSector) query.jobSector = jobSector;
+      if (fromDate && toDate) {
+        const from = new Date(fromDate);
+        const to = new Date(toDate);
+        to.setHours(23, 59, 59, 999);
+        query.createdAt = {
+          $gte: from,
+          $lte: to,
+        };
+      }
+      const total = await JobPost.countDocuments(query);
 
-    getJobPostForApp : async (req, res) => {
-        try {
-            const categoryName=req.query.categoryName||'';
-            const subCategoryName=req.query.subCategoryName||'';
-            const jobTitle=req.query.jobTitle||'';
-            const query = {jobSector:"private"};
-            
-            if(categoryName) query.categoryName=categoryName;
-            if(subCategoryName) query.subCategoryName= subCategoryName;
-            if(jobTitle) query.jobTitle={ $regex: new RegExp(jobTitle, 'i') };;
-            const total = await JobPost.countDocuments(query);
+      const jobposts = await JobPost.find(query)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
 
-            const jobposts = await JobPost.find(query)
-                .sort({ createdAt: -1 })
+      const response = {
+        data: jobposts,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalList: total,
+      };
 
-    
-            const response = {
-                data: jobposts,
-                totalList: total
-            };
-    
-            return sendResponse("Data fetched successfully", res, constant.CODE.SUCCESS, response, 1);
-        } catch (error) {
-            console.error(error);
-            return sendResponse("Internal Server Error", res, constant.CODE.INTERNAL_SERVER_ERROR, {}, 0);
-        }
-    },
+      return sendResponse(
+        "Data fetched successfully",
+        res,
+        constant.CODE.SUCCESS,
+        response,
+        1
+      );
+    } catch (error) {
+      console.error(error);
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 
-    getJobForGovernment : async (req, res) => {
-        try {
-            const categoryName=req.query.categoryName||'';
-            const subCategoryName=req.query.subCategoryName||'';
-            const jobTitle=req.query.jobTitle||'';
-            const query = {jobSector:"government"};
-            
-            if(categoryName) query.categoryName=categoryName;
-            if(subCategoryName) query.subCategoryName= subCategoryName;
-            if(jobTitle) query.jobTitle={ $regex: new RegExp(jobTitle, 'i') };;
-            const total = await JobPost.countDocuments(query);
+  getJobPostForApp: async (req, res) => {
+    try {
+      const categoryName = req.query.categoryName || "";
+      const subCategoryName = req.query.subCategoryName || "";
+      const jobTitle = req.query.jobTitle || "";
+      const query = {};
 
-            const jobposts = await JobPost.find(query)
-                .sort({ createdAt: -1 })
+      query.jobSector = { $regex: new RegExp("private", "i") };
 
-    
-            const response = {
-                data: jobposts,
-                totalList: total
-            };
-    
-            return sendResponse("Data fetched successfully", res, constant.CODE.SUCCESS, response, 1);
-        } catch (error) {
-            console.error(error);
-            return sendResponse("Internal Server Error", res, constant.CODE.INTERNAL_SERVER_ERROR, {}, 0);
-        }
-    },
+      if (categoryName) query.categoryName = categoryName;
+      if (subCategoryName) query.subCategoryName = subCategoryName;
+      if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
+      const total = await JobPost.countDocuments(query);
 
+      const jobposts = await JobPost.find(query).sort({ createdAt: -1 });
 
+      const response = {
+        data: jobposts,
+        totalList: total,
+      };
 
+      return sendResponse(
+        "Data fetched successfully",
+        res,
+        constant.CODE.SUCCESS,
+        response,
+        1
+      );
+    } catch (error) {
+      console.error(error);
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 
-    
+  getJobForGovernment: async (req, res) => {
+    try {
+      const categoryName = req.query.categoryName || "";
+      const subCategoryName = req.query.subCategoryName || "";
+      const jobTitle = req.query.jobTitle || "";
+      const query = {};
 
-}
+      query.jobSector = { $regex: new RegExp("government", "i") };
+      if (categoryName) query.categoryName = categoryName;
+      if (subCategoryName) query.subCategoryName = subCategoryName;
+      if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
+      const total = await JobPost.countDocuments(query);
+
+      const jobposts = await JobPost.find(query).sort({ createdAt: -1 });
+
+      const response = {
+        data: jobposts,
+        totalList: total,
+      };
+
+      return sendResponse(
+        "Data fetched successfully",
+        res,
+        constant.CODE.SUCCESS,
+        response,
+        1
+      );
+    } catch (error) {
+      console.error(error);
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
+};
