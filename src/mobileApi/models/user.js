@@ -24,14 +24,17 @@ const userSchema = new Schema(
     education: {
       type: String,
       default: null,
+      trim: true,
     },
     address: {
       type: String,
       default: null,
+      trim: true,
     },
     profession: {
       type: String,
       default: null,
+      trim: true,
     },
     profileImage: {
       type: String,
