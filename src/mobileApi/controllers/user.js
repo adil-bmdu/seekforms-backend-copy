@@ -55,6 +55,8 @@ module.exports = {
 
       const userSaved = new User(userObj);
       await userSaved.save();
+      const { _id } = userSaved;
+      const token = helper.createJwtToken({ mobile, _id });
 
       console.log(userSaved);
 
@@ -62,7 +64,7 @@ module.exports = {
         constant.MESSAGE.REGISTERED,
         res,
         constant.CODE.SUCCESS,
-        { user: userSaved },
+        { user: userSaved, token: token },
         1
       );
     } catch (error) {
