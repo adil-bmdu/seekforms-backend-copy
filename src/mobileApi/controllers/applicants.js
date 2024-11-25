@@ -13,14 +13,26 @@ module.exports = {
     if (!mongoose.isValidObjectId(postId)) {
       return res.status(400).send({ error: "Invalid userId format." });
     }
-    const userId = new mongoose.Types.ObjectId(_id);
-    const jobpostId = new mongoose.Types.ObjectId(postId);
     try {
-      const applicant = new Applicant({
+      const userId = new mongoose.Types.ObjectId(_id);
+      const jobpostId = new mongoose.Types.ObjectId(postId);
+
+      // Check if the applicant already exists
+      const isApplicantExist = await Applicant.findOne({
         userId,
         jobpostId,
-      });
+      }).populate("jobpostId");
+
+      if (isApplicantExist) {
+        return res
+          .status(400)
+          .send({ error: "Already applied", data: isApplicantExist });
+      }
+
+      // Create a new applicant if not found
+      const applicant = new Applicant({ userId, jobpostId });
       await applicant.save();
+
       return sendResponse(
         "Applicant posted successfully",
         res,
@@ -29,6 +41,7 @@ module.exports = {
         0
       );
     } catch (error) {
+      console.error(error); // Log error for debugging
       return sendResponse(
         "Internal Server Error",
         res,
