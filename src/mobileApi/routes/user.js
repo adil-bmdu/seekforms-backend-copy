@@ -25,5 +25,10 @@ router.post(
   authentication,
   applicantController.postApplicant
 );
+router.post(
+  "/draft-applicant",
+  authentication,
+  applicantController.draftApplicant
+);
 
 module.exports = router;

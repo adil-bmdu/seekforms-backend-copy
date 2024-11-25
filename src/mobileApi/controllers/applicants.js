@@ -1,22 +1,12 @@
 const Applicant = require("../models/applicant");
 const { sendResponse } = require("../../config/helper");
 const constant = require("../../config/constant");
-const mongoose = require("mongoose");
 
 module.exports = {
   postApplicant: async (req, res) => {
-    const { _id } = req.user;
-    const { jobpostId: postId } = req.body;
-    if (!mongoose.isValidObjectId(_id)) {
-      return res.status(400).send({ error: "Invalid userId format." });
-    }
-    if (!mongoose.isValidObjectId(postId)) {
-      return res.status(400).send({ error: "Invalid userId format." });
-    }
+    const { _id: userId } = req.user;
+    const { jobpostId } = req.body;
     try {
-      const userId = new mongoose.Types.ObjectId(_id);
-      const jobpostId = new mongoose.Types.ObjectId(postId);
-
       // Check if the applicant already exists
       const isApplicantExist = await Applicant.findOne({
         userId,
@@ -28,16 +18,63 @@ module.exports = {
           .status(400)
           .send({ error: "Already applied", data: isApplicantExist });
       }
+      const data = {
+        userId: userId,
+        jobpostId: jobpostId,
+      };
 
       // Create a new applicant if not found
-      const applicant = new Applicant({ userId, jobpostId });
+      const applicant = new Applicant(data);
       await applicant.save();
 
       return sendResponse(
         "Applicant posted successfully",
         res,
         constant.CODE.SUCCESS,
-        { applicant },
+        { data },
+        0
+      );
+    } catch (error) {
+      console.error(error); // Log error for debugging
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
+  draftApplicant: async (req, res) => {
+    const { _id: userId } = req.user;
+    const { jobpostId } = req.body;
+    try {
+      // Check if the applicant already exists
+      const isApplicantExist = await Applicant.findOne({
+        userId,
+        jobpostId,
+      }).populate("jobpostId");
+
+      if (isApplicantExist) {
+        return res
+          .status(400)
+          .send({ error: "Already applied", data: isApplicantExist });
+      }
+      const data = {
+        userId: userId,
+        jobpostId: jobpostId,
+        status: "draft",
+      };
+
+      // Create a new applicant if not found
+      const applicant = new Applicant(data);
+      await applicant.save();
+
+      return sendResponse(
+        "Applicant posted successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { data },
         0
       );
     } catch (error) {
@@ -52,11 +89,7 @@ module.exports = {
     }
   },
   getApplicant: async (req, res) => {
-    const { _id } = req.user;
-    if (!mongoose.isValidObjectId(_id)) {
-      return res.status(400).send({ error: "Invalid userId format." });
-    }
-    const userId = new mongoose.Types.ObjectId(_id);
+    const { _id: userId } = req.user;
     try {
       const applicant = await Applicant.find({ userId }).populate("jobpostId");
       return sendResponse(
