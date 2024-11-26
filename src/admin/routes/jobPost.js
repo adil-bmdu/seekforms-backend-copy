@@ -41,7 +41,7 @@ router.get('/jobpost',authenticate,jobPostController.getJobPostList);
 
 router.get('/jobpost-by-id/:Id',authenticate,jobPostController.getJobPostById);
 
-router.get('/jobpost-list',authenticate,jobPostController.getJobPostForApp)
+router.get('/private-job-list',authenticate,jobPostController.getJobPostForApp)
 
 router.get('/government-job-list',authenticate,jobPostController.getJobForGovernment)
 
