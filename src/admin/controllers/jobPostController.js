@@ -2,6 +2,7 @@ const JobPost = require("../Models/JobPost");
 const constant = require("../../config/constant");
 const { sendResponse } = require("../../config/helper");
 const { uploadToCloudinary } = require("../../helper/cloudinary");
+const Applicant = require("../../mobileApi/models/applicant");
 
 module.exports = {
   createJobPost: async (req, res) => {
@@ -223,11 +224,24 @@ module.exports = {
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
       const total = await JobPost.countDocuments(query);
 
+      const userId = req.user._id;
+      const jobpostId = await Applicant.find(
+        { userId: userId },
+        { jobpostId: 1, _id: 0 }
+      );
+      const jobId = JSON.parse(
+        JSON.stringify(jobpostId.map((item) => item.jobpostId))
+      );
+
       const jobposts = await JobPost.find(query).sort({ createdAt: -1 });
 
+      const result = jobposts.filter(
+        (item) => !jobId.includes(JSON.parse(JSON.stringify(item._id)))
+      );
+
       const response = {
-        data: jobposts,
-        totalList: total,
+        data: result,
+        totalList: result.length,
       };
 
       return sendResponse(
@@ -262,11 +276,24 @@ module.exports = {
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
       const total = await JobPost.countDocuments(query);
 
+      const userId = req.user._id;
+      const jobpostId = await Applicant.find(
+        { userId: userId },
+        { jobpostId: 1, _id: 0 }
+      );
+      const jobId = JSON.parse(
+        JSON.stringify(jobpostId.map((item) => item.jobpostId))
+      );
+
       const jobposts = await JobPost.find(query).sort({ createdAt: -1 });
 
+      const result = jobposts.filter(
+        (item) => !jobId.includes(JSON.parse(JSON.stringify(item._id)))
+      );
+
       const response = {
-        data: jobposts,
-        totalList: total,
+        data: result,
+        totalList: result.length,
       };
 
       return sendResponse(
