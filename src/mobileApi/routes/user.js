@@ -30,5 +30,15 @@ router.post(
   authentication,
   applicantController.draftApplicant
 );
+router.put(
+  "/update-draft-applicant",
+  authentication,
+  applicantController.updateDraftApplication
+);
+router.delete(
+  "/delete-draft-applicant",
+  authentication,
+  applicantController.deleteDraftApplication
+);
 
 module.exports = router;

@@ -109,4 +109,64 @@ module.exports = {
       );
     }
   },
+  updateDraftApplication: async (req, res) => {
+    const { _id: userId } = req.user;
+    const { jobpostId } = req.body;
+    const status = "pending";
+    try {
+      const applicant = await Applicant.findOneAndUpdate(
+        { userId, jobpostId },
+        { status },
+        { new: true }
+      ).populate("jobpostId");
+
+      if (!applicant) {
+        return res.status(404).send({ error: "Applicant not found" });
+      }
+
+      return sendResponse(
+        "Application updated successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { applicant },
+        0
+      );
+    } catch (error) {
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
+  deleteDraftApplication: async (req, res) => {
+    const { _id: userId } = req.user;
+    const { jobpostId } = req.body;
+    try {
+      const applicant = await Applicant.findOneAndDelete({
+        userId,
+        jobpostId,
+      });
+      if (!applicant) {
+        return res.status(404).send({ error: "Applicant not found" });
+      }
+      return sendResponse(
+        "Application deleted successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { applicant },
+        0
+      );
+    } catch (error) {
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 };
