@@ -7,7 +7,7 @@ const enteranceExamSchema = new Schema(
       type: String,
       required: true,
     },
-    data: [
+    examData: [
       {
         field: {
           type: String,

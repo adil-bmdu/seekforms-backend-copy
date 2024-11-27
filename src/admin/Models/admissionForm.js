@@ -7,7 +7,7 @@ const admissionForm = new Schema(
       type: String,
       required: true,
     },
-    data: [
+    formData: [
       {
         program: {
           type: String,
