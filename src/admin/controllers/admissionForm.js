@@ -32,7 +32,7 @@ module.exports = {
       };
       const response = {
         degreeType,
-        data,
+        formData: data,
       };
       const isDegreeTypeExist = await AdmissionForm.findOne({ degreeType });
       if (!isDegreeTypeExist) {
@@ -41,7 +41,7 @@ module.exports = {
       } else {
         const admissionForm = await AdmissionForm.findOneAndUpdate(
           { degreeType },
-          { $push: { data } }
+          { $push: { formData: data } }
         );
       }
       return sendResponse(

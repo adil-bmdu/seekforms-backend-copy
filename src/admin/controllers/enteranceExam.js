@@ -28,7 +28,7 @@ module.exports = {
       };
       const response = {
         catagory,
-        data,
+        examData: data,
       };
       const isCatagoryExist = await EnteranceExam.findOne({ catagory });
       if (!isCatagoryExist) {
@@ -37,7 +37,7 @@ module.exports = {
       } else {
         const exam = await EnteranceExam.findOneAndUpdate(
           { catagory },
-          { $push: { data } }
+          { $push: { examData: data } }
         );
       }
       return sendResponse(
