@@ -39,9 +39,10 @@ module.exports = {
         const admissionForm = new AdmissionForm(response);
         await admissionForm.save();
       } else {
-        const admissionForm = await AdmissionForm.findOneAndUpdate({
-          $push: { data },
-        });
+        const admissionForm = await AdmissionForm.findOneAndUpdate(
+          { degreeType },
+          { $push: { data } }
+        );
       }
       return sendResponse(
         "Admission form created successfully",
