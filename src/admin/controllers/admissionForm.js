@@ -5,20 +5,41 @@ const AdmissionForm = require("../Models/admissionForm");
 module.exports = {
   createForm: async (req, res) => {
     try {
-      const admissionForm = new AdmissionForm(req.body);
+      const data = req.body;
+      const admissionForm = new AdmissionForm(data);
       await admissionForm.save();
-      sendResponse(
+      return sendResponse(
+        "Admission form created successfully",
         res,
         constant.CODE.SUCCESS,
-        "Admission form created successfully",
-        {},
-        201
+        { data },
+        200
       );
     } catch (error) {
-      sendResponse(
+      return sendResponse(
+        "Failed to create admission form",
         res,
         constant.CODE.INTERNAL_SERVER_ERROR,
-        "Failed to create admission form",
+        {},
+        500
+      );
+    }
+  },
+  getForms: async (req, res) => {
+    try {
+      const data = await AdmissionForm.find();
+      return sendResponse(
+        "Admission form fetched successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { data },
+        200
+      );
+    } catch (error) {
+      return sendResponse(
+        "Failed to fetch admission form",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
         {},
         500
       );

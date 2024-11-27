@@ -33,7 +33,7 @@ const admissionForm = new Schema(
       required: true,
     },
     platformFee: {
-      type: String,
+      type: Number,
       required: true,
     },
     ageLimit: {
