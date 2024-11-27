@@ -112,7 +112,7 @@ module.exports = {
   updateDraftApplication: async (req, res) => {
     const { _id: userId } = req.user;
     const { jobpostId } = req.body;
-    const status = "pending";
+    const status = "applied";
     try {
       const applicant = await Applicant.findOneAndUpdate(
         { userId, jobpostId },
