@@ -5,9 +5,41 @@ const EnteranceExam = require("../Models/enteranceExam");
 module.exports = {
   createExam: async (req, res) => {
     try {
-      const data = req.body;
-      const exam = new EnteranceExam(data);
-      await exam.save();
+      const {
+        catagory,
+        field,
+        eligibility,
+        document,
+        examDate,
+        examTime,
+        examDuration,
+        examLocation,
+        examInstructions,
+      } = req.body;
+      const data = {
+        field,
+        eligibility,
+        document,
+        examDate,
+        examTime,
+        examDuration,
+        examLocation,
+        examInstructions,
+      };
+      const response = {
+        catagory,
+        data,
+      };
+      const isCatagoryExist = await EnteranceExam.findOne({ catagory });
+      if (!isCatagoryExist) {
+        const exam = new EnteranceExam(response);
+        await exam.save();
+      } else {
+        const exam = await EnteranceExam.findOneAndUpdate(
+          { catagory },
+          { $push: { data } }
+        );
+      }
       return sendResponse(
         "Enterance exam created successfully",
         res,
