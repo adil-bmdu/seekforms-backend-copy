@@ -5,14 +5,49 @@ const AdmissionForm = require("../Models/admissionForm");
 module.exports = {
   createForm: async (req, res) => {
     try {
-      const data = req.body;
-      const admissionForm = new AdmissionForm(data);
-      await admissionForm.save();
+      const {
+        degreeType,
+        program,
+        fieldOfStudy,
+        college,
+        location,
+        totalFee,
+        eligibility,
+        platformFee,
+        ageLimit,
+        documents,
+        imgUrl,
+      } = req.body;
+      const data = {
+        program,
+        fieldOfStudy,
+        college,
+        location,
+        totalFee,
+        eligibility,
+        platformFee,
+        ageLimit,
+        documents,
+        imgUrl,
+      };
+      const response = {
+        degreeType,
+        data,
+      };
+      const isDegreeTypeExist = await AdmissionForm.findOne({ degreeType });
+      if (!isDegreeTypeExist) {
+        const admissionForm = new AdmissionForm(response);
+        await admissionForm.save();
+      } else {
+        const admissionForm = await AdmissionForm.findOneAndUpdate({
+          $push: { data },
+        });
+      }
       return sendResponse(
         "Admission form created successfully",
         res,
         constant.CODE.SUCCESS,
-        { data },
+        { response },
         200
       );
     } catch (error) {
