@@ -7,6 +7,7 @@ module.exports = {
     try {
       const {
         catagory,
+        ingUrl,
         field,
         eligibility,
         document,
@@ -28,6 +29,7 @@ module.exports = {
       };
       const response = {
         catagory,
+        ingUrl,
         examData: data,
       };
       const isCatagoryExist = await EnteranceExam.findOne({ catagory });

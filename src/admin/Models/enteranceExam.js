@@ -7,6 +7,10 @@ const enteranceExamSchema = new Schema(
       type: String,
       required: true,
     },
+    imgUrl: {
+      type: String,
+      default: null,
+    }
     examData: [
       {
         field: {

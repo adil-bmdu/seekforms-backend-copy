@@ -226,7 +226,7 @@ module.exports = {
 
       const userId = req.user._id;
       const jobpostId = await Applicant.find(
-        { userId: userId },
+        { userId: userId, status: { $not: { $eq: "draft" } } },
         { jobpostId: 1, _id: 0 }
       );
       const jobId = JSON.parse(
