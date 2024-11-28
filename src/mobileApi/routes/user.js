@@ -4,6 +4,7 @@ const userController = require("../../mobileApi/controllers/user");
 const upload = require("../../helper/fileUpload");
 const authentication = require("../../helper/jwtAuth");
 const applicantController = require("../../mobileApi/controllers/applicants");
+const home = require("../controllers/home");
 
 router.post("/register", userController.userRegister);
 
@@ -40,5 +41,6 @@ router.delete(
   authentication,
   applicantController.deleteDraftApplication
 );
+router.get("/home", authentication, home.getHomeData);
 
 module.exports = router;
