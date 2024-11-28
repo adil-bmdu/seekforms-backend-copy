@@ -35,14 +35,9 @@ module.exports = {
           applied: privateAppplicant,
         },
         {
-          name: "Ignou",
+          name: "IGNOU",
           newJobs: ignouNum,
           applied: ignouAppplicant,
-        },
-        {
-          name: "Entrance Exams",
-          newJobs: examNum,
-          applied: examAppplicant,
         },
         {
           name: "Counselling",
@@ -50,7 +45,12 @@ module.exports = {
           applied: counsellingAppplicant,
         },
         {
-          name: "Query",
+          name: "Entrance Exams",
+          newJobs: examNum,
+          applied: examAppplicant,
+        },
+        {
+          name: "Get Query",
           newJobs: queryNum,
           applied: queryAppplicant,
         },
