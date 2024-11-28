@@ -229,6 +229,13 @@ module.exports = {
         { userId: userId, status: { $not: { $eq: "draft" } } },
         { jobpostId: 1, _id: 0 }
       );
+      const draftId = await Applicant.find(
+        { userId: userId, status: { $eq: "draft" } },
+        { jobpostId: 1, _id: 0 }
+      );
+      const draft = JSON.parse(
+        JSON.stringify(draftId.map((item) => item.jobpostId))
+      );
       const jobId = JSON.parse(
         JSON.stringify(jobpostId.map((item) => item.jobpostId))
       );
@@ -239,10 +246,16 @@ module.exports = {
         (item) => !jobId.includes(JSON.parse(JSON.stringify(item._id)))
       );
 
+      const finalResult = result.map((item) => {
+        item.isSaved = draft.includes(JSON.parse(JSON.stringify(item._id)))
+          ? true
+          : false;
+        return item;
+      });
+
       const response = {
-        data: result,
-        totalList: result.length,
-        savedJob: jobId,
+        data: finalResult,
+        totalList: finalResult.length,
       };
 
       return sendResponse(
@@ -282,6 +295,15 @@ module.exports = {
         { userId: userId, status: { $not: { $eq: "draft" } } },
         { jobpostId: 1, _id: 0 }
       );
+
+      const draftId = await Applicant.find(
+        { userId: userId, status: { $eq: "draft" } },
+        { jobpostId: 1, _id: 0 }
+      );
+      const draft = JSON.parse(
+        JSON.stringify(draftId.map((item) => item.jobpostId))
+      );
+
       const jobId = JSON.parse(
         JSON.stringify(jobpostId.map((item) => item.jobpostId))
       );
@@ -292,10 +314,16 @@ module.exports = {
         (item) => !jobId.includes(JSON.parse(JSON.stringify(item._id)))
       );
 
+      const finalResult = result.map((item) => {
+        item.isSaved = draft.includes(JSON.parse(JSON.stringify(item._id)))
+          ? true
+          : false;
+        return item;
+      });
+
       const response = {
-        data: result,
-        totalList: result.length,
-        savedJob: jobId,
+        data: finalResult,
+        totalList: finalResult.length,
       };
 
       return sendResponse(
