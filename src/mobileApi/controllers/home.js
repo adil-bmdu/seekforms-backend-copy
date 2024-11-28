@@ -50,7 +50,7 @@ module.exports = {
           applied: examAppplicant,
         },
         {
-          name: "Get Query",
+          name: "Get Queries",
           newJobs: queryNum,
           applied: queryAppplicant,
         },
