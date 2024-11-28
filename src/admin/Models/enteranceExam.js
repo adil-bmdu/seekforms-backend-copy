@@ -10,7 +10,7 @@ const enteranceExamSchema = new Schema(
     imgUrl: {
       type: String,
       default: null,
-    }
+    },
     examData: [
       {
         field: {
