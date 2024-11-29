@@ -10,7 +10,7 @@ module.exports = {
         discountMoney,
         serviceMoney,
         serviceName,
-        perForm,
+        nextServiceDetail,
         formCount,
         admitCardCount,
         ...detail
@@ -23,7 +23,7 @@ module.exports = {
         discountMoney,
         serviceMoney,
         serviceName,
-        perForm,
+        nextServiceDetail,
         serviceDetails,
         formCount,
         admitCardCount,

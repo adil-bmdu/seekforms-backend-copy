@@ -19,7 +19,7 @@ const paidServices = new Schema(
       type: String,
       required: true,
     },
-    perForm: {
+    nextServiceDetail: {
       type: String,
       required: true,
     },
@@ -33,10 +33,12 @@ const paidServices = new Schema(
     formCount: {
       type: Number,
       required: true,
+      default: 0,
     },
     admitCardCount: {
       type: Number,
       required: true,
+      default: 0,
     },
   },
   { timestamps: true }
