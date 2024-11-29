@@ -7,6 +7,7 @@ const user = require("../../admin/routes/user");
 const admissionForm = require("../../admin/routes/ignou");
 const exam = require("../../admin/routes/exam");
 const counsellor = require("../../admin/routes/counsellor");
+const paidServices = require("../../admin/routes/paidServices");
 
 router.use("/auth", adminAuth);
 router.use("/jobpost", jobPost);
@@ -15,5 +16,6 @@ router.use("/user", user);
 router.use("/ignou", admissionForm);
 router.use("/exam", exam);
 router.use("/counsellor", counsellor);
+router.use("/paid-services", paidServices);
 
 module.exports = router;
