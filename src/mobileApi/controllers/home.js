@@ -7,14 +7,17 @@ const Applicant = require("../../mobileApi/models/applicant");
 module.exports = {
   getHomeData: async (req, res) => {
     try {
+      const userId = req.user._id;
       const govNum = await JobPost.countDocuments({
         jobSector: { $regex: new RegExp("Government", "i") },
       });
-      const govAppplicant = await Applicant.countDocuments();
+      const govAppplicant = await Applicant.countDocuments({ userId: userId });
       const privateNum = await JobPost.countDocuments({
         jobSector: { $regex: new RegExp("Private", "i") },
       });
-      const privateAppplicant = await Applicant.countDocuments();
+      const privateAppplicant = await Applicant.countDocuments({
+        userId: userId,
+      });
       const examNum = await EnteranceExam.countDocuments();
       const examAppplicant = 0;
       const ignouNum = 0;
