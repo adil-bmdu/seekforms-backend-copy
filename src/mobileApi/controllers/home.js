@@ -8,54 +8,79 @@ module.exports = {
   getHomeData: async (req, res) => {
     try {
       const userId = req.user._id;
-      const govNum = await JobPost.countDocuments({
-        jobSector: { $regex: new RegExp("Government", "i") },
-      });
-      const govAppplicant = await Applicant.countDocuments({ userId: userId });
-      const privateNum = await JobPost.countDocuments({
-        jobSector: { $regex: new RegExp("Private", "i") },
-      });
-      const privateAppplicant = await Applicant.countDocuments({
-        userId: userId,
-      });
+      //code for government jobs
+      const gov = await JobPost.find(
+        {
+          jobSector: { $regex: new RegExp("Government", "i") },
+        },
+        { _id: 1 }
+      );
+      const govNum = gov.length;
+      const govApp = await Applicant.find(
+        { userId: userId },
+        { jobpostId: 1, _id: 0 }
+      );
+      const govId = gov.map((item) => JSON.stringify(item._id));
+      const govAppId = govApp.map((item) => JSON.stringify(item.jobpostId));
+      const govAppNum = govAppId.filter((item) => govId.includes(item)).length;
+      //code for private jobs
+      const private = await JobPost.find(
+        {
+          jobSector: { $regex: new RegExp("Private", "i") },
+        },
+        { _id: 1 }
+      );
+      const privateNum = private.length;
+      const privateApplicant = await Applicant.find(
+        { userId: userId },
+        { jobpostId: 1, _id: 0 }
+      );
+      const privateId = private.map((item) => JSON.stringify(item._id));
+      const privateAppId = privateApplicant.map((item) =>
+        JSON.stringify(item.jobpostId)
+      );
+      const privateAppNum = privateAppId.filter((item) =>
+        privateId.includes(item)
+      ).length;
+      //code for exam
       const examNum = await EnteranceExam.countDocuments();
-      const examAppplicant = 0;
+      const examApplicant = 0;
       const ignouNum = 0;
-      const ignouAppplicant = 0;
+      const ignouApplicant = 0;
       const counsellingNum = 0;
-      const counsellingAppplicant = 0;
+      const counsellingApplicant = 0;
       const queryNum = 0;
-      const queryAppplicant = 0;
+      const queryApplicant = 0;
       const data = [
         {
           name: "Govt. Jobs",
           newJobs: govNum,
-          applied: govAppplicant,
+          applied: govAppNum,
         },
         {
           name: "Private Jobs",
           newJobs: privateNum,
-          applied: privateAppplicant,
+          applied: privateAppNum,
         },
         {
           name: "IGNOU",
           newJobs: ignouNum,
-          applied: ignouAppplicant,
+          applied: ignouApplicant,
         },
         {
           name: "Counselling",
           newJobs: counsellingNum,
-          applied: counsellingAppplicant,
+          applied: counsellingApplicant,
         },
         {
           name: "Entrance Exams",
           newJobs: examNum,
-          applied: examAppplicant,
+          applied: examApplicant,
         },
         {
           name: "Get Queries",
           newJobs: queryNum,
-          applied: queryAppplicant,
+          applied: queryApplicant,
         },
       ];
       return sendResponse(
