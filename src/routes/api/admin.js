@@ -8,6 +8,7 @@ const admissionForm = require("../../admin/routes/ignou");
 const exam = require("../../admin/routes/exam");
 const counsellor = require("../../admin/routes/counsellor");
 const paidServices = require("../../admin/routes/paidServices");
+const banner = require("../../admin/routes/banner");
 
 router.use("/auth", adminAuth);
 router.use("/jobpost", jobPost);
@@ -17,5 +18,6 @@ router.use("/ignou", admissionForm);
 router.use("/exam", exam);
 router.use("/counsellor", counsellor);
 router.use("/paid-services", paidServices);
+router.use("/banner", banner);
 
 module.exports = router;
