@@ -17,7 +17,7 @@ module.exports = {
       );
       const govNum = gov.length;
       const govApp = await Applicant.find(
-        { userId: userId },
+        { userId: userId, status: { $not: { $eq: "draft" } } },
         { jobpostId: 1, _id: 0 }
       );
       const govId = gov.map((item) => JSON.stringify(item._id));
@@ -32,7 +32,7 @@ module.exports = {
       );
       const privateNum = private.length;
       const privateApplicant = await Applicant.find(
-        { userId: userId },
+        { userId: userId, status: { $not: { $eq: "draft" } } },
         { jobpostId: 1, _id: 0 }
       );
       const privateId = private.map((item) => JSON.stringify(item._id));
