@@ -393,4 +393,136 @@ module.exports = {
       );
     }
   },
+  getFilterData: async (req, res) => {
+    try {
+      const jobSector = req.query.jobSector;
+      const query = {};
+      if (jobSector) {
+        query.jobSector = jobSector;
+      }
+      const salary = await JobPost.find(query, {
+        salary: 1,
+        _id: 0,
+      });
+      const salaryList = salary.map((item) => item.salary);
+      const finalSalary = [
+        ...salaryList,
+        "10,000-20,000",
+        "20,000-30,000",
+        "30,000-40,000",
+        "40,000-50,000",
+      ];
+      const uniqueSalaryList = finalSalary.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+      const qualification = await JobPost.find(query, {
+        qualification: 1,
+        _id: 0,
+      });
+      const qualificationList = qualification.map((item) => item.qualification);
+      const qualificationChat = [
+        "10th",
+        "12th",
+        "Diploma",
+        "Bachelor's",
+        "Master's",
+        "PhD",
+        "Graduate",
+        "Post Graduate",
+        "B.Tech",
+        "B.E",
+        "B.com",
+        ...qualificationList,
+      ];
+      const uniqueQualification = qualificationChat.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+      const locality = await JobPost.find(query, {
+        locality: 1,
+        _id: 0,
+      });
+      const localityList = locality.map((item) => item.locality);
+      const sortLocality = localityList.map((item) => item.split(" "));
+      const finalLocality = sortLocality.map((item) => item[0]);
+      const location = [
+        "Bangalore",
+        "Mumbai",
+        "Delhi",
+        "Hyderabad",
+        "Pune",
+        "Chennai",
+        "Gurgaon",
+        "Noida",
+        "Ahmedabad",
+        "Kolkata",
+        "Surat",
+        "Jaipur",
+        "Chandigarh",
+        "Indore",
+        "Coimbatore",
+        "Visakhapatnam",
+        ...finalLocality,
+      ];
+      const uniqueLocation = location.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+
+      const indianStates = [
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+      ];
+
+      const data = {
+        salary: uniqueSalaryList.sort(),
+        qualification: uniqueQualification,
+        state: indianStates,
+        location: uniqueLocation,
+      };
+      const result = {
+        data,
+        totalList: data.length,
+      };
+      return sendResponse(
+        "Data fetched successfully",
+        res,
+        constant.CODE.SUCCESS,
+        result,
+        1
+      );
+    } catch (error) {
+      return sendResponse(
+        "Internal Server Error",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        0
+      );
+    }
+  },
 };
