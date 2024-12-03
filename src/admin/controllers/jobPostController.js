@@ -224,8 +224,10 @@ module.exports = {
       query.jobSector = { $regex: new RegExp("private", "i") };
       const salaryRange = salary.split("-");
 
-      if (categoryName) query.categoryName = categoryName;
-      if (subCategoryName) query.subCategoryName = subCategoryName;
+      if (categoryName)
+        query.categoryName = { $regex: new RegExp(categoryName, "i") };
+      if (subCategoryName)
+        query.subCategoryName = { $regex: new RegExp(subCategoryName, "i") };
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
       // mobileApi job filter
       if (qualification) query.qualification = qualification;
