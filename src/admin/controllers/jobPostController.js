@@ -398,7 +398,7 @@ module.exports = {
       const jobSector = req.query.jobSector;
       const query = {};
       if (jobSector) {
-        query.jobSector = jobSector;
+        query.jobSector = { $regex: new RegExp(jobSector, "i") };
       }
       const salary = await JobPost.find(query, {
         salary: 1,
@@ -442,7 +442,8 @@ module.exports = {
         _id: 0,
       });
       const localityList = locality.map((item) => item.locality);
-      const sortLocality = localityList.map((item) => item.split(" "));
+      const localityFilter = localityList.filter((item) => item !== null);
+      const sortLocality = localityFilter.map((item) => item.split(" "));
       const finalLocality = sortLocality.map((item) => item[0]);
       const location = [
         "Bangalore",
