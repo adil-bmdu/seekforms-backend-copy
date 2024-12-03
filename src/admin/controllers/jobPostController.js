@@ -215,13 +215,36 @@ module.exports = {
       const categoryName = req.query.categoryName || "";
       const subCategoryName = req.query.subCategoryName || "";
       const jobTitle = req.query.jobTitle || "";
+      const qualification = req.query.qualification || "";
+      const state = req.query.state || "";
+      const location = req.query.location || "";
+      const salary = req.query.salary || "";
       const query = {};
 
       query.jobSector = { $regex: new RegExp("private", "i") };
+      const salaryRange = salary.split("-");
 
       if (categoryName) query.categoryName = categoryName;
       if (subCategoryName) query.subCategoryName = subCategoryName;
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
+      // mobileApi job filter
+      if (qualification) query.qualification = qualification;
+      if (state)
+        query.$or = [
+          { city: { $regex: new RegExp(state, "i") } },
+          { locality: { $regex: new RegExp(state, "i") } },
+        ];
+      if (location)
+        query.$or = [
+          { city: { $regex: new RegExp(location, "i") } },
+          { locality: { $regex: new RegExp(location, "i") } },
+        ];
+      if (salary)
+        query.$or = [
+          { salary: { $regex: new RegExp(salaryRange[0], "i") } },
+          { salary: { $regex: new RegExp(salaryRange[1], "i") } },
+        ];
+      // mobileApi job filter end
       const total = await JobPost.countDocuments(query);
 
       const userId = req.user._id;
@@ -282,12 +305,36 @@ module.exports = {
       const categoryName = req.query.categoryName || "";
       const subCategoryName = req.query.subCategoryName || "";
       const jobTitle = req.query.jobTitle || "";
+      const qualification = req.query.qualification || "";
+      const state = req.query.state || "";
+      const location = req.query.location || "";
+      const salary = req.query.salary || "";
       const query = {};
 
       query.jobSector = { $regex: new RegExp("government", "i") };
+      const salaryRange = salary.split("-");
+
       if (categoryName) query.categoryName = categoryName;
       if (subCategoryName) query.subCategoryName = subCategoryName;
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
+      // mobileApi job filter
+      if (qualification) query.qualification = qualification;
+      if (state)
+        query.$or = [
+          { city: { $regex: new RegExp(state, "i") } },
+          { locality: { $regex: new RegExp(state, "i") } },
+        ];
+      if (location)
+        query.$or = [
+          { city: { $regex: new RegExp(location, "i") } },
+          { locality: { $regex: new RegExp(location, "i") } },
+        ];
+      if (salary)
+        query.$or = [
+          { salary: { $regex: new RegExp(salaryRange[0], "i") } },
+          { salary: { $regex: new RegExp(salaryRange[1], "i") } },
+        ];
+      // mobileApi job filter end
       const total = await JobPost.countDocuments(query);
 
       const userId = req.user._id;
