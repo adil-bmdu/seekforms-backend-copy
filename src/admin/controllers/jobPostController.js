@@ -231,16 +231,12 @@ module.exports = {
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
       // mobileApi job filter
       if (qualification) query.qualification = qualification;
-      if (state)
-        query.$or = [
-          { city: { $regex: new RegExp(state, "i") } },
-          { locality: { $regex: new RegExp(state, "i") } },
-        ];
-      if (location)
-        query.$or = [
-          { city: { $regex: new RegExp(location, "i") } },
-          { locality: { $regex: new RegExp(location, "i") } },
-        ];
+      if (state) {
+        query.locality = { $regex: new RegExp(state, "i") };
+      }
+      if (location) {
+        query.city = { $regex: new RegExp(location, "i") };
+      }
       if (salary)
         query.$or = [
           { salary: { $regex: new RegExp(salaryRange[0], "i") } },
@@ -321,16 +317,12 @@ module.exports = {
       if (jobTitle) query.jobTitle = { $regex: new RegExp(jobTitle, "i") };
       // mobileApi job filter
       if (qualification) query.qualification = qualification;
-      if (state)
-        query.$or = [
-          { city: { $regex: new RegExp(state, "i") } },
-          { locality: { $regex: new RegExp(state, "i") } },
-        ];
-      if (location)
-        query.$or = [
-          { city: { $regex: new RegExp(location, "i") } },
-          { locality: { $regex: new RegExp(location, "i") } },
-        ];
+      if (state) {
+        query.locality = { $regex: new RegExp(state, "i") };
+      }
+      if (location) {
+        query.city = { $regex: new RegExp(location, "i") };
+      }
       if (salary)
         query.$or = [
           { salary: { $regex: new RegExp(salaryRange[0], "i") } },
