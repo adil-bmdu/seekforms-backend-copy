@@ -3,6 +3,7 @@ const constant = require("../../config/constant");
 const { sendResponse } = require("../../config/helper");
 const { uploadToCloudinary } = require("../../helper/cloudinary");
 const Applicant = require("../../mobileApi/models/applicant");
+const indianStates = require("../../config/state");
 
 module.exports = {
   createJobPost: async (req, res) => {
@@ -429,73 +430,11 @@ module.exports = {
       const uniqueQualification = qualificationChat.filter(
         (item, index, self) => self.indexOf(item) === index
       );
-      const locality = await JobPost.find(query, {
-        locality: 1,
-        _id: 0,
-      });
-      const localityList = locality.map((item) => item.locality);
-      const localityFilter = localityList.filter((item) => item !== null);
-      const sortLocality = localityFilter.map((item) => item.split(" "));
-      const finalLocality = sortLocality.map((item) => item[0]);
-      const location = [
-        "Bangalore",
-        "Mumbai",
-        "Delhi",
-        "Hyderabad",
-        "Pune",
-        "Chennai",
-        "Gurgaon",
-        "Noida",
-        "Ahmedabad",
-        "Kolkata",
-        "Surat",
-        "Jaipur",
-        "Chandigarh",
-        "Indore",
-        "Coimbatore",
-        "Visakhapatnam",
-        ...finalLocality,
-      ];
-      const uniqueLocation = location.filter(
-        (item, index, self) => self.indexOf(item) === index
-      );
-
-      const indianStates = [
-        "Andhra Pradesh",
-        "Arunachal Pradesh",
-        "Assam",
-        "Bihar",
-        "Chhattisgarh",
-        "Goa",
-        "Gujarat",
-        "Haryana",
-        "Himachal Pradesh",
-        "Jharkhand",
-        "Karnataka",
-        "Kerala",
-        "Madhya Pradesh",
-        "Maharashtra",
-        "Manipur",
-        "Meghalaya",
-        "Mizoram",
-        "Nagaland",
-        "Odisha",
-        "Punjab",
-        "Rajasthan",
-        "Sikkim",
-        "Tamil Nadu",
-        "Telangana",
-        "Tripura",
-        "Uttar Pradesh",
-        "Uttarakhand",
-        "West Bengal",
-      ];
 
       const data = {
         salary: uniqueSalaryList.sort(),
         qualification: uniqueQualification,
-        state: indianStates,
-        location: uniqueLocation,
+        indianStates,
       };
       const result = {
         data,
