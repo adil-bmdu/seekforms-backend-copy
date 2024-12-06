@@ -23,6 +23,7 @@ module.exports = {
       const govId = gov.map((item) => JSON.stringify(item._id));
       const govAppId = govApp.map((item) => JSON.stringify(item.jobpostId));
       const govAppNum = govAppId.filter((item) => govId.includes(item)).length;
+      const govRejected = 0;
       //code for private jobs
       const private = await JobPost.find(
         {
@@ -42,6 +43,7 @@ module.exports = {
       const privateAppNum = privateAppId.filter((item) =>
         privateId.includes(item)
       ).length;
+      const privateRejected = 0;
       //code for exam
       const examNum = await EnteranceExam.countDocuments();
       const examApplicant = 0;
@@ -56,11 +58,13 @@ module.exports = {
           name: "Govt. Jobs",
           newJobs: govNum,
           applied: govAppNum,
+          rejected: govRejected,
         },
         {
           name: "Private Jobs",
           newJobs: privateNum,
           applied: privateAppNum,
+          rejected: privateRejected,
         },
         {
           name: "IGNOU",
