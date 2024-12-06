@@ -23,9 +23,14 @@ module.exports = {
           200
         );
       } else {
+        const updateData = { $addToSet: { testType } };
+        if (imgUrl) {
+          updateData.$set = { imgUrl };
+        }
+
         const mockTest = await MockTestList.findOneAndUpdate(
           { testName },
-          { $addToSet: { testType } },
+          updateData,
           { new: true }
         );
         return sendResponse(
