@@ -5,6 +5,11 @@ const mockTestListSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imgUrl: {
+    type: String,
+    required: true,
+    default: null,
+  },
   testType: [
     {
       type: String,
