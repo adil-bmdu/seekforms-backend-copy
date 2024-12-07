@@ -19,6 +19,11 @@ const questionSchema = new mongoose.Schema({
   },
   questions: [
     {
+      _id: false,
+      questionId: {
+        type: mongoose.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId(),
+      },
       question: {
         type: String,
         required: true,
