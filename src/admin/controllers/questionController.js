@@ -40,7 +40,7 @@ module.exports = {
           { testType, testName },
           { $addToSet: { questions: questions } }
         );
-        const updatedEntry = await Question.findOne({ testType });
+        const updatedEntry = await Question.findOne({ testType, testName });
         return sendResponse(
           "Question added successfully",
           res,
