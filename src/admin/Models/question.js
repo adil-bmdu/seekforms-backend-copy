@@ -5,7 +5,11 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  duration: {
+  testName: {
+    type: String,
+    required: true,
+  },
+  durationPerQuestion: {
     type: Number,
     required: true,
   },

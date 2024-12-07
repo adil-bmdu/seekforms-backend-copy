@@ -8,16 +8,23 @@ module.exports = {
     try {
       const {
         testType,
-        duration,
+        testName,
+        durationPerQuestion,
         markPerQuestion,
         question,
         correctAnswer,
         ...option
       } = req.body;
-      const isQuestionExist = await Question.findOne({ testType });
+      const isQuestionExist = await Question.findOne({ testType, testName });
       const options = Object.values(option);
       const questions = [{ question, correctAnswer, options }];
-      const data = { testType, duration, markPerQuestion, questions };
+      const data = {
+        testType,
+        testName,
+        durationPerQuestion,
+        markPerQuestion,
+        questions,
+      };
       if (!isQuestionExist) {
         const entry = new Question(data);
         await entry.save();
@@ -30,7 +37,7 @@ module.exports = {
         );
       } else {
         await Question.findOneAndUpdate(
-          { testType },
+          { testType, testName },
           { $addToSet: { questions: questions } }
         );
         const updatedEntry = await Question.findOne({ testType });
@@ -59,7 +66,10 @@ module.exports = {
       const entry = question.map((item) => {
         return {
           testType: item.testType,
-          duration: `${item.duration} minutes`,
+          testName: item.testName,
+          duration: `${
+            item.durationPerQuestion * item.questions.length
+          } minutes`,
           totalMarks: `${item.markPerQuestion * item.questions.length} Marks`,
           totalQuestions: `${item.questions.length} Questions`,
           questions: item.questions,
