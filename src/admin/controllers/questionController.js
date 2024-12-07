@@ -65,6 +65,7 @@ module.exports = {
       const question = await Question.find({ testType: type });
       const entry = question.map((item) => {
         return {
+          testId: item._id,
           testType: item.testType,
           testName: item.testName,
           duration: `${
