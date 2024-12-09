@@ -98,7 +98,16 @@ module.exports = {
             (item) => item.questionType === questionType
           );
         }
-        return item;
+        return {
+          ...item,
+          questions: item.questions.map((item) => {
+            return {
+              questionId: item.questionId,
+              question: item.question,
+              options: item.options,
+            };
+          }),
+        };
       });
       return sendResponse(
         "Questions fetched successfully",
