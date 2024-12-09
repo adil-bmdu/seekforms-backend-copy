@@ -113,7 +113,7 @@ module.exports = {
         "Questions fetched successfully",
         res,
         constant.CODE.SUCCESS,
-        { questions: entryFilter },
+        { entry: entryFilter },
         200
       );
     } catch (error) {
