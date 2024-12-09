@@ -93,16 +93,18 @@ module.exports = {
         };
       });
       const entryFilter = entry.map((item) => {
-        item.questions = item.questions.filter(
-          (item) => item.questionType === questionType
-        );
+        if (questionType) {
+          item.questions = item.questions.filter(
+            (item) => item.questionType === questionType
+          );
+        }
         return item;
       });
       return sendResponse(
         "Questions fetched successfully",
         res,
         constant.CODE.SUCCESS,
-        { questions: questionType ? entryFilter : entry },
+        { questions: entryFilter },
         200
       );
     } catch (error) {
