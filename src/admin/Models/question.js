@@ -24,6 +24,10 @@ const questionSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         default: () => new mongoose.Types.ObjectId(),
       },
+      questionType: {
+        type: String,
+        required: true,
+      },
       question: {
         type: String,
         required: true,
@@ -35,7 +39,10 @@ const questionSchema = new mongoose.Schema({
       correctAnswer: {
         type: Number,
         required: true,
-        select: false,
+      },
+      solution: {
+        type: String,
+        required: true,
       },
     },
   ],

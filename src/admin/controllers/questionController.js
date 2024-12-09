@@ -11,13 +11,17 @@ module.exports = {
         testName,
         durationPerQuestion,
         markPerQuestion,
+        questionType,
         question,
         correctAnswer,
+        solution,
         ...option
       } = req.body;
       const isQuestionExist = await Question.findOne({ testType, testName });
       const options = Object.values(option);
-      const questions = [{ question, correctAnswer, options }];
+      const questions = [
+        { questionType, question, correctAnswer, options, solution },
+      ];
       const data = {
         testType,
         testName,
@@ -62,7 +66,9 @@ module.exports = {
   getQuestion: async (req, res) => {
     try {
       const type = req.query.testType;
-      const question = await Question.find({ testType: type });
+      const questionType = req.query.questionType;
+      const query = { testType: type };
+      const question = await Question.find(query);
       const entry = question.map((item) => {
         return {
           testId: item._id,
@@ -76,11 +82,14 @@ module.exports = {
           questions: item.questions,
         };
       });
+      const entryFilter = entry.map((item) =>
+        item.questions.filter((item) => item.questionType === questionType)
+      );
       return sendResponse(
         "Questions fetched successfully",
         res,
         constant.CODE.SUCCESS,
-        { entry },
+        { questions: questionType ? entryFilter : entry },
         200
       );
     } catch (error) {
