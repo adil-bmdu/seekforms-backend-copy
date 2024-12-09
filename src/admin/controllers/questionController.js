@@ -82,7 +82,14 @@ module.exports = {
           totalMarks: `${item.markPerQuestion * item.questions.length} Marks`,
           totalQuestions: `${item.questions.length} Questions`,
           questionTypes: uniqueQuestionType,
-          questions: item.questions,
+          questions: item.questions.map((item) => {
+            return {
+              questionId: item.questionId,
+              questionType: item.questionType,
+              question: item.question,
+              options: item.options,
+            };
+          }),
         };
       });
       const entryFilter = entry.map((item) => {
