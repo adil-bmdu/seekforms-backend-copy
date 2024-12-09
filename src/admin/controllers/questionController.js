@@ -68,7 +68,7 @@ module.exports = {
           testId: item._id,
           testType: item.testType,
           testName: item.testName,
-          duration: item.durationPerQuestion * item.questions.length,
+          duration: String(item.durationPerQuestion * item.questions.length),
           totalMarks: `${item.markPerQuestion * item.questions.length} Marks`,
           totalQuestions: `${item.questions.length} Questions`,
           questions: item.questions,
