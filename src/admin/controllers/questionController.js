@@ -70,6 +70,8 @@ module.exports = {
       const query = { testType: type };
       const question = await Question.find(query);
       const entry = question.map((item) => {
+        const questionType = item.questions.map((item) => item.questionType);
+        const uniqueQuestionType = [...new Set(questionType)];
         return {
           testId: item._id,
           testType: item.testType,
@@ -79,6 +81,7 @@ module.exports = {
           ).trim(),
           totalMarks: `${item.markPerQuestion * item.questions.length} Marks`,
           totalQuestions: `${item.questions.length} Questions`,
+          questionTypes: uniqueQuestionType,
           questions: item.questions,
         };
       });
