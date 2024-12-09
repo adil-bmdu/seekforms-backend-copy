@@ -82,9 +82,12 @@ module.exports = {
           questions: item.questions,
         };
       });
-      const entryFilter = entry.map((item) =>
-        item.questions.filter((item) => item.questionType === questionType)
-      );
+      const entryFilter = entry.map((item) => {
+        item.questions = item.questions.filter(
+          (item) => item.questionType === questionType
+        );
+        return item;
+      });
       return sendResponse(
         "Questions fetched successfully",
         res,
