@@ -12,6 +12,10 @@ const answerSchema = new mongoose.Schema(
       ref: "Question",
       required: true,
     },
+    isSubmitted: {
+      type: Boolean,
+      default: false,
+    },
     answers: [
       {
         questionId: {
