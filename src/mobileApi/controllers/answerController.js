@@ -5,28 +5,15 @@ const Answer = require("../models/answer");
 module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
-    const { testId, answers: data } = req.body;
-    const answers = data ? JSON.parse(JSON.stringify(data)) : [];
+    const { testId, answers } = req.body;
     try {
       const data = {
         userId,
         testId,
         answers,
       };
-      // const isSubmitted = await Answer.findOne({ userId, testId });
-      // if (!isSubmitted) {
-      //   const answer = new Answer(data);
-      //   await answer.save();
-      //   return sendResponse(
-      //     "Answer submitted successfully",
-      //     res,
-      //     constant.CODE.SUCCESS,
-      //     { answer },
-      //     0
-      //   );
-      // }
       return sendResponse(
-        "Answer already submitted",
+        "You Have Sended Test Answer Successfully",
         res,
         constant.CODE.SUCCESS,
         { answer: data },
