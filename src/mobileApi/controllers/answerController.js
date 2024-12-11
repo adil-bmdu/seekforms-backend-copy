@@ -5,8 +5,7 @@ const Answer = require("../models/answer");
 module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
-    const { testId, answers: answer } = req.body;
-    const answers = typeof answer === "string" ? JSON.parse(answer) : answer;
+    const { testId, answers } = req.body;
     const type = typeof answers;
     try {
       const data = {
