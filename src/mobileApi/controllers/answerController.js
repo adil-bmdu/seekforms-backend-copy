@@ -6,7 +6,7 @@ module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
     const { testId, answers: data } = req.body;
-    const answers = JSON.parse(JSON.stringify(data));
+    const answers = data ? JSON.parse(JSON.stringify(data)) : [];
     try {
       const data = {
         userId,
