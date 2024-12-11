@@ -5,18 +5,34 @@ const Answer = require("../models/answer");
 module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
-    const { testId, answers } = req.body;
+    const { testId, answers: data } = req.body;
+    const answers = data.map((item) => ({
+      questionId: item.questionId,
+      answer: item.answer,
+    }));
     try {
       const data = {
         userId,
         testId,
         answers,
       };
+      const isSubmitted = await Answer.findOne({ userId, testId });
+      if (!isSubmitted) {
+        const answer = new Answer(data);
+        await answer.save();
+        return sendResponse(
+          "Answer submitted successfully",
+          res,
+          constant.CODE.SUCCESS,
+          { answer },
+          0
+        );
+      }
       return sendResponse(
-        "You Have Sended Test Answer Successfully",
+        "Answer already submitted",
         res,
         constant.CODE.SUCCESS,
-        { answer: data },
+        { answer: isSubmitted },
         0
       );
     } catch (error) {
