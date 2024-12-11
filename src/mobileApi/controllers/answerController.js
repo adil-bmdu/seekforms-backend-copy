@@ -15,23 +15,13 @@ module.exports = {
         answers,
         type,
       };
-      const isSubmitted = await Answer.findOne({ userId, testId });
-      if (!isSubmitted) {
-        const answer = new Answer(data);
-        await answer.save();
-        return sendResponse(
-          "Answer submitted successfully",
-          res,
-          constant.CODE.SUCCESS,
-          { answer },
-          0
-        );
-      }
+      const answer = new Answer(data);
+      await answer.save();
       return sendResponse(
-        "Answer already submitted",
+        "Answer submitted successfully",
         res,
         constant.CODE.SUCCESS,
-        { answer: isSubmitted },
+        { answer },
         0
       );
     } catch (error) {
