@@ -7,12 +7,13 @@ module.exports = {
     const { _id: userId } = req.user;
     const { testId, answers: answer } = req.body;
     const answers = typeof answer === "string" ? JSON.parse(answer) : answer;
-    console.log(answers);
+    const type = typeof answers;
     try {
       const data = {
         userId,
         testId,
         answers,
+        type,
       };
       // const isSubmitted = await Answer.findOne({ userId, testId });
       // if (!isSubmitted) {
