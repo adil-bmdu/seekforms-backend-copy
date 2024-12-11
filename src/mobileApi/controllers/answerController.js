@@ -7,13 +7,11 @@ module.exports = {
     const { _id: userId } = req.user;
     const { testId, answers: answer } = req.body;
     const answers = JSON.parse(answer);
-    const type = typeof answers;
     try {
       const data = {
         userId,
         testId,
         answers,
-        type,
       };
       const answer = new Answer(data);
       await answer.save();
