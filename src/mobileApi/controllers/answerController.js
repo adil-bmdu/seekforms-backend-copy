@@ -5,7 +5,11 @@ const Answer = require("../models/answer");
 module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
-    const { testId, answers } = req.body;
+    const { testId, answers: answer } = req.body;
+    const answers = answer.map((item) => ({
+      questionId: item.questionId,
+      answer: item.answer,
+    }));
     try {
       const data = {
         userId,
