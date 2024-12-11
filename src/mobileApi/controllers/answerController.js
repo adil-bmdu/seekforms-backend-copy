@@ -5,31 +5,32 @@ const Answer = require("../models/answer");
 module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
-    const { testId, answers } = req.body;
-    const answer = typeof answers;
+    const { testId, answers: answer } = req.body;
+    const answers = typeof answer === "string" ? JSON.parse(answer) : answer;
+    console.log(answers);
     try {
       const data = {
         userId,
         testId,
-        answer,
+        answers,
       };
-      // const isSubmitted = await Answer.findOne({ userId, testId });
-      // if (!isSubmitted) {
-      //   const answer = new Answer(data);
-      //   await answer.save();
-      //   return sendResponse(
-      //     "Answer submitted successfully",
-      //     res,
-      //     constant.CODE.SUCCESS,
-      //     { answer },
-      //     0
-      //   );
-      // }
+      const isSubmitted = await Answer.findOne({ userId, testId });
+      if (!isSubmitted) {
+        const answer = new Answer(data);
+        await answer.save();
+        return sendResponse(
+          "Answer submitted successfully",
+          res,
+          constant.CODE.SUCCESS,
+          { answer },
+          0
+        );
+      }
       return sendResponse(
         "Answer already submitted",
         res,
         constant.CODE.SUCCESS,
-        { answer: data },
+        { answer: isSubmitted },
         0
       );
     } catch (error) {
