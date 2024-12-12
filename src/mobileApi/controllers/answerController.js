@@ -7,7 +7,14 @@ module.exports = {
   submitAnswer: async (req, res) => {
     const { _id: userId } = req.user;
     const { testId, answers: answer } = req.body;
-    const answers = JSON.parse(answer);
+    const preAnswers = JSON.parse(answer);
+    const postAnswers = preAnswers.reverse();
+    console.log(postAnswers);
+    const filterAnswers = postAnswers.filter(
+      (item, index, self) =>
+        index === self.findIndex((t) => t.questionId === item.questionId)
+    );
+    const answers = filterAnswers.reverse();
     try {
       const data = {
         userId,
