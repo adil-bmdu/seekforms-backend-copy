@@ -87,7 +87,7 @@ module.exports = {
       const preview = {
         score: `${correctAnswer.length * perQuestionMarks}/${totalMarks}`,
         rank: "1/200",
-        percentage: parseFloat(
+        percentage: String(
           (
             ((correctAnswer.length * perQuestionMarks) / totalMarks) *
             100
