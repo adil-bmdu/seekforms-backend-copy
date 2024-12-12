@@ -78,7 +78,7 @@ module.exports = {
       const perQuestionMarks = allQuestions.markPerQuestion;
       const totalMarks = allQuestions.questions.length * perQuestionMarks;
       const preview = {
-        srore: `${correctAnswer.length * perQuestionMarks}/${totalMarks}`,
+        score: `${correctAnswer.length * perQuestionMarks}/${totalMarks}`,
         rank: "1/200",
         percentage: parseFloat(
           (
