@@ -35,14 +35,6 @@ module.exports = {
         );
         return question.correctAnswer === Number(answer.answer);
       });
-      const correct = questions.filter((question) => {
-        const correct = correctAnswer.find(
-          (answer) =>
-            JSON.stringify(answer.questionId) ===
-            JSON.stringify(question.questionId)
-        );
-        return correct;
-      });
       const incorrectAnswer = answers.filter((answer) => {
         const question = questions.find(
           (question) =>
@@ -50,30 +42,6 @@ module.exports = {
             JSON.stringify(answer.questionId)
         );
         return question.correctAnswer !== Number(answer.answer);
-      });
-      const incorrect = questions.filter((question) => {
-        const incorrect = incorrectAnswer.find(
-          (answer) =>
-            JSON.stringify(answer.questionId) ===
-            JSON.stringify(question.questionId)
-        );
-        return incorrect;
-      });
-      const incorrectFinal = incorrect.map((question) => {
-        const answer = incorrectAnswer.find(
-          (answer) =>
-            JSON.stringify(answer.questionId) ===
-            JSON.stringify(question.questionId)
-        );
-        return {
-          questionType: question.questionType,
-          questionId: question.questionId,
-          question: question.question,
-          options: question.options,
-          answer: answer.answer,
-          correctAnswer: question.correctAnswer,
-          solution: question.solution,
-        };
       });
       const perQuestionMarks = allQuestions.markPerQuestion;
       const totalMarks = allQuestions.questions.length * perQuestionMarks;
@@ -86,18 +54,11 @@ module.exports = {
         incorrectAnswer: incorrectAnswer.length,
         unattemptedQuestions: unattemptedQuestions.length,
       };
-      const finalResult = {
-        preview,
-        unattemptedQuestions,
-        correct,
-        incorrectFinal,
-        answers: questions,
-      };
       return sendResponse(
         "Answer submitted successfully",
         res,
         constant.CODE.SUCCESS,
-        { finalResult },
+        { preview },
         0
       );
     } catch (error) {
