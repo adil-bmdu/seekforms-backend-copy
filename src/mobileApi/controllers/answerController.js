@@ -80,7 +80,7 @@ module.exports = {
       const preview = {
         srore: `${correctAnswer.length * perQuestionMarks}/${totalMarks}`,
         rank: "1/200",
-        percentage: Number(
+        percentage: parseFloat(
           (
             ((correctAnswer.length * perQuestionMarks) / totalMarks) *
             100
