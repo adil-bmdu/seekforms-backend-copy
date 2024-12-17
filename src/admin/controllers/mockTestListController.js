@@ -5,8 +5,7 @@ const MockTestList = require("../Models/mockTestList");
 module.exports = {
   createMockTest: async (req, res) => {
     try {
-      const { testName, imgUrl, ...type } = req.body;
-      const testType = Object.values(type);
+      const { testName, imgUrl, testType } = req.body;
       const isTestExist = await MockTestList.findOne({ testName });
       if (!isTestExist) {
         const mockTest = new MockTestList({
