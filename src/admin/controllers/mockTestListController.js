@@ -40,7 +40,7 @@ module.exports = {
           200
         );
       } else {
-        const updateData = { $addToSet: { testType } };
+        const updateData = { $set: { testType } };
         if (imgUrl) {
           updateData.$set = { imgUrl };
         }
