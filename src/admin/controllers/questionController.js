@@ -15,10 +15,10 @@ module.exports = {
         question,
         correctAnswer,
         solution,
-        ...option
+        option,
       } = req.body;
       const isQuestionExist = await Question.findOne({ testType, testName });
-      const options = Object.values(option);
+      const options = option.split(",").map((item) => item.trim());
       const questions = [
         { questionType, question, correctAnswer, options, solution },
       ];
