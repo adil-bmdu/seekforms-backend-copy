@@ -147,4 +147,35 @@ module.exports = {
       );
     }
   },
+  getAllQuestions: async (req, res) => {
+    try {
+      const testType = req.query.testType;
+      const page = req.query.page;
+      const limit = req.query.limit;
+      const skip = (page - 1) * limit;
+      const question = await Question.find({ testType })
+        .limit(limit)
+        .skip(skip);
+      const total = await Question.countDocuments({ testType });
+      const data = {
+        question,
+        total,
+      };
+      return sendResponse(
+        "Questions fetched successfully",
+        res,
+        constant.CODE.SUCCESS,
+        { data: data },
+        200
+      );
+    } catch (error) {
+      return sendResponse(
+        "Failed to fetch questions",
+        res,
+        constant.CODE.INTERNAL_SERVER_ERROR,
+        {},
+        500
+      );
+    }
+  },
 };

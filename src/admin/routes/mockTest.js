@@ -16,5 +16,6 @@ router.delete("/delete-test-list/:id", authenticate, mockTest.deleteTestList);
 router.get("/get-questions", authenticate, question.getQuestion);
 router.post("/create-question", authenticate, question.createQuestion);
 router.delete("/delete-question/:id", authenticate, question.deleteQuestion);
+router.get("/get-all-questions", authenticate, question.getAllQuestions);
 
 module.exports = router;
