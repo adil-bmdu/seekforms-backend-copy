@@ -49,7 +49,7 @@ module.exports = {
           "Question added successfully",
           res,
           constant.CODE.SUCCESS,
-          { updatedEntry },
+          { data: updatedEntry },
           200
         );
       }
