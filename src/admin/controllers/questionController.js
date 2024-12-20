@@ -36,7 +36,7 @@ module.exports = {
           "Question created successfully",
           res,
           constant.CODE.SUCCESS,
-          { data },
+          { data: entry },
           200
         );
       } else {
