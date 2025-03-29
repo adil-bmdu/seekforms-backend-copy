@@ -10,6 +10,7 @@ const counsellor = require("../../admin/routes/counsellor");
 const paidServices = require("../../admin/routes/paidServices");
 const banner = require("../../admin/routes/banner");
 const mockTest = require("../../admin/routes/mockTest");
+const applicants = require("../../admin/routes/applicants");
 
 router.use("/auth", adminAuth);
 router.use("/jobpost", jobPost);
@@ -21,5 +22,6 @@ router.use("/counsellor", counsellor);
 router.use("/paid-services", paidServices);
 router.use("/banner", banner);
 router.use("/mock-test", mockTest);
+router.use("/applicants", applicants);
 
 module.exports = router;
