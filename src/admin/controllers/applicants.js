@@ -92,15 +92,43 @@ module.exports = {
       { $limit: limit },
     ];
 
+    const countPipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      {
+        $lookup: {
+          from: "jobposts",
+          localField: "jobpostId",
+          foreignField: "_id",
+          as: "jobpost",
+        },
+      },
+      { $unwind: "$jobpost" },
+      { $match: matchConditions },
+      { $count: "totalCount" },
+    ];
     try {
       const applicants = await Applicant.aggregate(pipeline);
-      const totalApplicants = applicants.length;
-
+      const countResult = await Applicant.aggregate(countPipeline);
+      const totalApplicants = countResult[0]?.totalCount || 0;
+      const response = {
+        data: applicants,
+        currentPage: page,
+        totalPages: Math.ceil(totalApplicants / limit),
+        totalList: totalApplicants,
+      };
       return sendResponse(
         "Applicants fetched successfully",
         res,
         constant.CODE.SUCCESS,
-        { applicants, totalApplicants },
+        response,
         0
       );
     } catch (error) {
