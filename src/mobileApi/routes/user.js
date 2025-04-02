@@ -18,7 +18,12 @@ router.put("/reset-password/:mobile", userController.resetPassword);
 
 router.get("/profile", authentication, userController.profile);
 
-router.put("/profile", authentication, userController.updateProfile);
+router.put(
+  "/profile",
+  authentication,
+  upload.single("profileImage"),
+  userController.updateProfile
+);
 
 router.get("/get-applicant", authentication, applicantController.getApplicant);
 router.post(

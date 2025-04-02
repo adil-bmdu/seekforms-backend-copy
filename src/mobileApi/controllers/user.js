@@ -4,6 +4,7 @@ const { sendResponse } = require("../../config/helper");
 const constant = require("../../config/constant");
 const helper = require("../../config/helper");
 const OTP = require("../models/otp");
+const { uploadToCloudinary } = require("../../helper/cloudinary");
 module.exports = {
   userRegister: async (req, res) => {
     try {
@@ -352,9 +353,19 @@ module.exports = {
       if (req.body.name) updateData.name = req.body.name;
       if (req.body.email) updateData.email = req.body.email;
       if (req.body.mobile) updateData.mobile = req.body.mobile;
+      if (req.body.dateOfBirth) updateData.dateOfBirth = req.body.dateOfBirth;
+      if (req.body.gender) updateData.gender = req.body.gender;
       if (req.body.education) updateData.education = req.body.education;
       if (req.body.address) updateData.address = req.body.address;
       if (req.body.profession) updateData.profession = req.body.profession;
+
+      if (req.file) {
+        profileImage = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.originalname
+        );
+        updateData.profileImage = profileImage.secure_url;
+      }
 
       const user = await User.findByIdAndUpdate(_id, updateData, { new: true });
       if (!user)
